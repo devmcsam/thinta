@@ -6,86 +6,72 @@
 #define THINTA_FIXED_H
 #include "internal/small_ints.h"
 
-#define DEFINE_INT_CONVERSIONS(struct_type) \
-static struct_type struct_type##_from_u8(u8 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_i8(i8 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_u16(u16 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_i16(i16 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_u32(u32 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_i32(i32 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_u64(u64 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_i64(i64 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_u128(u128 val) { return (struct_type){.bits = val}; } \
-static struct_type struct_type##_from_i128(i128 val) { return (struct_type){.bits = val}; }
+#define DECLARE_SINT_CONVERSIONS(struct_type)                  \
+    struct_type struct_type##_from_u8(const u8 val);           \
+    struct_type struct_type##_from_i8(const i8 val);           \
+    struct_type struct_type##_from_u16(const u16 val);         \
+    struct_type struct_type##_from_i16(const i16 val);         \
+    struct_type struct_type##_from_u32(const u32 val);         \
+    struct_type struct_type##_from_i32(const i32 val);         \
+    struct_type struct_type##_from_u64(const u64 val);         \
+    struct_type struct_type##_from_i64(const i64 val);         \
+    struct_type struct_type##_from_u128(const u128 val);       \
+    struct_type struct_type##_from_i128(const i128 val);
 
-#define DEFINE_FIXED_CONVERSION(to_type, from_type) \
-static inline to_type to_type##_from_##from_type(from_type val) { return (to_type){.bits = val.bits}; }
+#define DECLARE_UINT_CONVERSIONS(struct_type)                  \
+    struct_type struct_type##_from_u8(const u8 val);           \
+    struct_type struct_type##_from_u16(const u16 val);         \
+    struct_type struct_type##_from_u32(const u32 val);         \
+    struct_type struct_type##_from_u64(const u64 val);         \
+    struct_type struct_type##_from_u128(const u128 val);
 
+#define DECLARE_OP_SET(type, suffix, other_type)               \
+    type type##_add_##suffix(const type a, const other_type b); \
+    type type##_sub_##suffix(const type a, const other_type b); \
+    type type##_mul_##suffix(const type a, const other_type b); \
+    type type##_div_##suffix(const type a, const other_type b); \
+    type type##_mod_##suffix(const type a, const other_type b); \
+    void type##_addeq_##suffix(type *const a, const other_type b); \
+    void type##_subeq_##suffix(type *const a, const other_type b); \
+    void type##_muleq_##suffix(type *const a, const other_type b); \
+    void type##_diveq_##suffix(type *const a, const other_type b); \
+    void type##_modeq_##suffix(type *const a, const other_type b);
 
-typedef struct sint192 {
-    _BitInt(192) bits;
-} sint192;
+#define DECLARE_SINT_OPS(type)       \
+    DECLARE_OP_SET(type, type, type) \
+    DECLARE_OP_SET(type, u8, u8)     \
+    DECLARE_OP_SET(type, i8, i8)     \
+    DECLARE_OP_SET(type, u16, u16)   \
+    DECLARE_OP_SET(type, i16, i16)   \
+    DECLARE_OP_SET(type, u32, u32)   \
+    DECLARE_OP_SET(type, i32, i32)   \
+    DECLARE_OP_SET(type, u64, u64)   \
+    DECLARE_OP_SET(type, i64, i64)   \
+    DECLARE_OP_SET(type, u128, u128) \
+    DECLARE_OP_SET(type, i128, i128)
 
-DEFINE_INT_CONVERSIONS(sint192)
-
-typedef struct uint192 {
-    unsigned _BitInt(192) bits;
-} uint192;
-
-DEFINE_INT_CONVERSIONS(uint192)
+#define DECLARE_UINT_OPS(type)       \
+    DECLARE_OP_SET(type, type, type) \
+    DECLARE_OP_SET(type, u8, u8)     \
+    DECLARE_OP_SET(type, u16, u16)   \
+    DECLARE_OP_SET(type, u32, u32)   \
+    DECLARE_OP_SET(type, u64, u64)   \
+    DECLARE_OP_SET(type, u128, u128)
 
 typedef struct sint256 {
     _BitInt(256) bits;
 } sint256;
 
-DEFINE_INT_CONVERSIONS(sint256)
-DEFINE_FIXED_CONVERSION(sint256, sint192)
-DEFINE_FIXED_CONVERSION(sint256, uint192)
+DECLARE_SINT_CONVERSIONS(sint256)
+
+DECLARE_SINT_OPS(sint256)
 
 typedef struct uint256 {
     unsigned _BitInt(256) bits;
 } uint256;
 
-DEFINE_INT_CONVERSIONS(uint256)
-DEFINE_FIXED_CONVERSION(uint256, uint192)
+DECLARE_UINT_CONVERSIONS(uint256)
 
-typedef struct sint320 {
-    _BitInt(320) bits;
-} sint320;
+DECLARE_UINT_OPS(uint256)
 
-DEFINE_INT_CONVERSIONS(sint320)
-DEFINE_FIXED_CONVERSION(sint320, sint192)
-DEFINE_FIXED_CONVERSION(sint320, uint192)
-DEFINE_FIXED_CONVERSION(sint320, sint256)
-DEFINE_FIXED_CONVERSION(sint320, uint256)
-
-typedef struct uint320 {
-    unsigned _BitInt(320) bits;
-} uint320;
-
-DEFINE_INT_CONVERSIONS(uint320)
-DEFINE_FIXED_CONVERSION(uint320, uint192)
-DEFINE_FIXED_CONVERSION(uint320, uint256)
-
-typedef struct sint384 {
-    _BitInt(384) bits;
-} sint384;
-
-DEFINE_INT_CONVERSIONS(sint384)
-DEFINE_FIXED_CONVERSION(sint384, sint192)
-DEFINE_FIXED_CONVERSION(sint384, uint192)
-DEFINE_FIXED_CONVERSION(sint384, sint256)
-DEFINE_FIXED_CONVERSION(sint384, uint256)
-DEFINE_FIXED_CONVERSION(sint384, sint320)
-DEFINE_FIXED_CONVERSION(sint384, uint320)
-
-typedef struct uint384 {
-    unsigned _BitInt(384) bits;
-} uint384;
-
-DEFINE_INT_CONVERSIONS(uint384)
-DEFINE_FIXED_CONVERSION(uint384, uint192)
-DEFINE_FIXED_CONVERSION(uint384, uint256)
-DEFINE_FIXED_CONVERSION(uint384, uint320)
-
-#endif //THINTA_FIXED_H
+#endif // THINTA_FIXED_H

@@ -5,13 +5,13 @@
 #ifndef THINTA_FIXED_H
 #define THINTA_FIXED_H
 
-typedef struct SInt192 {
+typedef struct sint192 {
     _BitInt(192) bits;
-} SInt192;
+} sint192;
 
-typedef struct UInt192 {
+typedef struct uint192 {
     unsigned _BitInt(192) bits;
-} UInt192;
+} uint192;
 
 typedef struct sint256 {
     _BitInt(256) bits;

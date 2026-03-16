@@ -42,7 +42,6 @@ set(RELWITHDEBINFO_CFLAGS
 add_library(thinta STATIC
         src/thinta.c
         include/thinta.h
-        src/internal/thinta_internal.h
         src/internal/small_ints.h
 )
 

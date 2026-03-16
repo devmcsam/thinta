@@ -1,5 +1,4 @@
 #include "thinta.h"
-
 #include <stdio.h>
 
 void hello(void) {

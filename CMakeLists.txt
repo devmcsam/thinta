@@ -44,6 +44,7 @@ add_library(thinta STATIC
         include/thinta.h
         src/internal/small_ints.h
         src/internal/small_floats.h
+        include/integers/fixed.h
 )
 
 target_include_directories(thinta PUBLIC ${PROJECT_SOURCE_DIR}/include)
